@@ -189,9 +189,17 @@ optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 
 # 开始正式的训练工作
 
-1. 验证定义的内容
-2. 训练一个模型
-3. 
+1. 验证定义的内容（preload.py）
+2. 训练一个模型（train.py）
+3. 评测模型效果（evaluate.py）
+
+```python
+# 运行示例
+python3 ./CIFAR10/preload.py
+python3 ./CIFAR10/train.py
+python3 ./CIFAR10/evaluate.py
+
+```
 
 ## 验证加载器工作是否正常
 ```python
