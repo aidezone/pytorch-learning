@@ -42,4 +42,32 @@ pip install torch torchvision numpy matplotlib
 
 ## 训练一个简单的分类器（CIFAR10）
 
+当前示例主要以CIFAR10开源数据集为例，主要学习以下内容：
+1. 将开源数据集还原成可视化图片，并生成标注描述文件
+2. 自定义数据集和数据加载器。（此处不使用官方定义好的开源数据集读取库）
+3. 定义一个简单网络并训练产出模型
+4. 评测模型精度
+
 更多：https://github.com/aidezone/pytorch-learning/blob/main/CIFAR10/README.md
+
+
+## 训练一个动物识别模型
+
+当前示例会从百度抓取图片，并构建一个新的数据集，主要内容：
+1. 根据目录加载图片直接训练。（对于分类问题可以减少打标签标注的工作）
+2. 不同大小的图片输入训练。
+3. 使用开源实现的网络结构。
+
+下载图片工具：https://github.com/sczhengyabin/Image-Downloader （ fork：https://github.com/aidezone/Image-Downloader ）
+
+下载图片以动物名字命名文件夹：
+![](./resource/img/data_folder.png)
+
+更多：https://github.com/aidezone/pytorch-learning/blob/main/MY_ANIMALS/README.md
+
+
+## 使用开源训练工具库（lighting-flash）
+
+ongoing...
+
+
