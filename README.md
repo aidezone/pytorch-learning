@@ -57,6 +57,7 @@ pip install torch torchvision numpy matplotlib
 1. 根据目录加载图片直接训练。（对于分类问题可以减少打标签标注的工作）
 2. 不同大小的图片输入训练。
 3. 使用开源实现的网络结构。
+4. 使用第三方工具可视化推理结果和标注结果
 
 下载图片工具：https://github.com/sczhengyabin/Image-Downloader （ fork：https://github.com/aidezone/Image-Downloader ）
 

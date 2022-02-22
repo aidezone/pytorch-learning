@@ -28,7 +28,7 @@ for epoch in range(max_epoch):  # loop over the dataset multiple times
     running_loss = 0.0
     for i, data in enumerate(base.trainloader, 0):
         # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data
+        inputs, labels, _ = data
         # print(inputs)
         # print(labels)
 

@@ -220,3 +220,97 @@ testloader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
 从结果来看精度略有提升，当前训练设备是cpu，训练速度较慢，迭代次数较少，也可能因为网络比较简单。后续的例子将使用更多开源训练工具来完成训练。
 
 
+## 使用fiftyone查看推理结果
+
+### 改造评测脚本输出推理结果（evaluate.py）
+```python
+import base
+import torch
+import torchvision
+import json
+
+# 声明模型路径
+PATH = './data/AlexNet_animals.pth'
+
+# 读取部分测试数据
+dataiter = iter(base.testloader)
+images, labels, image_path = dataiter.next()
+
+# 实例化网络并加载训练完成的模型
+# net = base.MyCustomNet()
+print(len(base.classes))
+net = base.AlexNet(len(base.classes))
+net.load_state_dict(torch.load(PATH))
+
+# 得到模型推理tensor
+outputs = net(images)
+
+# 得到推理结果
+_, predicted = torch.max(outputs, 1)
+
+# 显示一部分图片 标注结果、推理结果
+print('标注结果: ', ' '.join(f'{base.classes[labels[j]]:5s}' for j in range(4)))
+print('推理结果: ', ' '.join(f'{base.classes[predicted[j]]:5s}' for j in range(4)))
+
+# base.imshow(torchvision.utils.make_grid(images))
+prediction_file = "./data/my_animals_inferance.jsonl"
+
+# 拿出5000张图片作为测试集
+fo = open(prediction_file, "w")
+# 输出推理结果
+with torch.no_grad():
+    for data in base.testloader:
+        images, labels, image_path = data
+        outputs = net(images)
+        _, predictions = torch.max(outputs, 1)
+        for label, prediction, image in zip(labels, predictions, image_path):
+            fo.write(json.dumps({
+                'image_path': image, 
+                'label': int(label), 
+                'prediction': int(prediction),
+                'label_name': base.classes[label], 
+                'prediction_name': base.classes[prediction],
+                }) + "\n")
+fo.close()
+```
+
+### 定义fiftyone数据集，并启动可视化界面（show_dataset.py）
+
+```python
+import glob
+import fiftyone as fo
+import json
+
+# 参考文档：https://voxel51.com/docs/fiftyone/user_guide/dataset_creation/index.html#custom-formats
+
+
+# 定义推理结果文件
+prediction_file = "./data/my_animals_inferance.jsonl"
+
+# 读取推理结果，形成一个fiftyone的Sample集合
+samples = []
+fp = open(prediction_file, "r+")
+for line in fp:
+    linestr = line.strip()
+    if linestr == "":
+        continue
+    lineObj = json.loads(linestr)
+
+    sample = fo.Sample(filepath=lineObj["image_path"])
+    sample["标注结果"] = fo.Classification(label=lineObj["label_name"])
+    sample["推理结果"] = fo.Classification(label=lineObj["prediction_name"])
+
+    samples.append(sample)
+fp.close()
+
+
+# 创建一个fiftyone数据集
+dataset = fo.Dataset("my-classification-dataset")
+dataset.add_samples(samples)
+
+# 运行APP
+session = fo.launch_app(dataset)
+
+# 等待服务会话
+session.wait()
+```
