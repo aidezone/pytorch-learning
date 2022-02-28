@@ -67,6 +67,22 @@ pip install torch torchvision numpy matplotlib
 更多：https://github.com/aidezone/pytorch-learning/blob/main/MY_ANIMALS/README.md
 
 
+## 学习使用torchvision提供的网络
+
+torchvision中提供了常用的网络实现
+![](./resource/img/torchvision_model.png)
+
+```python
+import torchvision.models as models
+
+# 实例化网络
+net = models.resnet34(pretrained=True)
+
+```
+更多：https://github.com/aidezone/pytorch-learning/blob/main/torch_vision_ResNet/README.md
+
+
+
 ## 使用开源训练工具库（lighting-flash）
 
 ongoing...
